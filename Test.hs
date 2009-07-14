@@ -7,6 +7,10 @@ import KripkeAutomata
 import ModelCheck
 import Main
 
+import LTLtoBuchi
+import Data.GraphViz
+import Buchi_GraphViz
+
 import qualified Data.Set as S
 import qualified Data.Map as M
 import Control.Arrow
@@ -57,6 +61,10 @@ propXeqY      = maybe False id . meq         . (M.lookup "x" &&& M.lookup "y") .
 
 formula1 = (@@) (atomic propWaiting ==> (atomic propWaiting `w` atomic propStable))
 formula2 = (<>) ((@@) (atomic propXeqY))
+formula1' = (@@) (atomic "propWaiting" ==> (atomic "propWaiting" `w` atomic "propStable"))
+formula2' = (<>) ((@@) (atomic "propXeqY"))
+
+
 
 buchi1 :: Buchi Int (Proposition State)
 buchi1 = Buchi {initState = 0, finalStates = S.singleton 2, arrows = arr}
@@ -78,6 +86,11 @@ buchi2 = Buchi {initState = 0, finalStates = S.singleton 1, arrows = arr}
                                 ]                     )
                           ]
 
+-- pictures for the formulaes 1 and 2
+show1 = print_buchi2dot (ltl2buchi formula1') Jpg "buchi1.jpg"
+show2 = print_buchi2dot (ltl2buchi formula2') Jpg "buchi2.jpg"
 
+formula3' =  (atomic "p" `U` (atomic "q" `U` atomic "r") )
+show3 =  print_buchi2dot (ltl2buchi formula3') Jpg "buchi3.jpg"
 
 
